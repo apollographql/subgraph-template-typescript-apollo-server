@@ -1,0 +1,58 @@
+{
+  "name": "@apollo/typescript-repo-template",
+  "private": true,
+  "description": "A template for TypeScript projects with pre-configured tooling",
+  "version": "0.0.0",
+  "author": "Apollo <packages@apollographql.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apollographql/typescript-repo-template"
+  },
+  "homepage": "https://github.com/apollographql/typescript-repo-template#readme",
+  "bugs": {
+    "url": "https://github.com/apollographql/typescript-repo-template/issues"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=12.0"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json && npm run schema:copy-files",
+    "clean": "git clean -dfqX",
+    "dev":"nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
+    "postinstall": "npm run build",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "schema:copy-files": "shx cp ./src/modules/*.graphql ./dist/modules",
+    "schema:output": "node -e 'require(\"./dist/utils/schema\").writeSchema()'",
+    "start": "npm run build && node dist/index.js",
+    "test": "jest",
+    "test:ci": "jest --coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit"
+  },
+  "dependencies": {
+    "@apollo/subgraph": "https://output.circle-artifacts.com/output/job/a97806a8-3640-48ca-89b8-93b53cbfd6ac/artifacts/0/storage/@apollo/subgraph/subgraph-2.0.1.tgz",
+    "apollo-datasource": "latest",
+    "apollo-server": "latest",
+    "graphql": "latest",
+    "graphql-tag": "latest"
+  },
+  "devDependencies": {
+    "@types/jest": "27.4.1",
+    "@types/node": "14.18.12",
+    "concurrently": "^7.1.0",
+    "jest": "27.5.1",
+    "jest-junit": "13.1.0",
+    "nodemon": "^2.0.15",
+    "prettier": "2.6.2",
+    "shx": "^0.3.4",
+    "ts-jest": "27.1.4",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.3"
+  },
+  "volta": {
+    "node": "16.14.2",
+    "npm": "8.6.0"
+  }
+}
