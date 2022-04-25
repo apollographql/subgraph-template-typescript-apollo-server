@@ -32,4 +32,4 @@ jobs:
       - name: Publish your schema to registry
         run: |
           rover graph check APOLLO_GRAPH_REF --schema ./generated-schema.graphql --name ${SUBGRAPH_NAME}
-        if: env.APOLLO_KEY != '' && env.APOLLO_GRAPH_REF != ''
+        if: $ {{ env.APOLLO_KEY != '' && env.APOLLO_GRAPH_REF != ''}}
