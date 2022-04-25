@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: apollo
     env:
-      APOLLO_VCS_COMMIT: \${{ github.event.pull_request.head.sha }}
-      APOLLO_KEY: \${{ secrets.APOLLO_KEY }}
-      APOLLO_GRAPH_REF: ${graph}@production
+      APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@production
       SUBGRAPH_NAME: locations
     steps:
       - uses: actions/checkout@v2
@@ -25,12 +25,14 @@ jobs:
         run: npm run schema:output
       - name: Install Rover
         run: |
-          curl -sSL https://rover.apollo.dev/nix/v0.1.0 | sh
+          curl -sSL https://rover.apollo.dev/nix/latest | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
 
 
       - name: Publish your schema to registry
-        if: ${{ env.APOLLO_KEY != '' && env.APOLLO_GRAPH_REF != ''}}
+        env:
+          APOLLO_GRAPH_NAME: $ {{ secrets.APOLLO_GRAPH_NAME }}
+        if: ${{ env.APOLLO_KEY != '' || env.APOLLO_GRAPH_NAME != '' || env.ROUTING_URL != ''}}
         run: |
           rover graph check APOLLO_GRAPH_REF --schema ./generated-schema.graphql --name ${SUBGRAPH_NAME}
         
