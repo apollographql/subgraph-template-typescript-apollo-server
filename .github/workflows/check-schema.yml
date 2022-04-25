@@ -34,5 +34,5 @@ jobs:
           APOLLO_GRAPH_NAME: $ {{ secrets.APOLLO_GRAPH_NAME }}
         if: ${{ env.APOLLO_KEY != '' }}
         run: |
-          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ./generated-schema.graphql --name ${{ SUBGRAPH_NAME }}
+          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ./generated-schema.graphql --name ${{ env.SUBGRAPH_NAME }}
         
