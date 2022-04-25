@@ -2,6 +2,46 @@
 
 This repo is meant to act as a reasonable foundation for a single NPM package developed in TypeScript. It makes use of a few tools that we've found particularly useful. Below are some notes on how to get started using these tools and ways in which you might want (or need) to configure them.
 
+## Apollo Server 
+
+This template repository contains the necessary boiler plate code for you to develop your Subgraph quickly. All you need to do is drop a schema defined in a `.graphql` file in the **modules** folder and you can run a subgraph locally. There are nice-to-have development aspects around schema modularization and datasource construction defined on folder structures.
+
+### Schema Modules
+
+By default, the `src/modules` folder is where your schema modules should live. A schema modules is defined by a set of type definitions and the associated resolvers (which are optional). The `src/utils/schema.js` file contains a helper function to generate a `GraphQLSchema` from the modules you define in the folder. The modules expect the `.graphql` file and associated resolvers to be named the same (i.e. `locations.graphql` and `locations.js`). 
+
+If you define resolvers, they should export `resolvers` and `typeDefs` like below:
+
+```javascript
+export const resolvers = {
+  ...
+}
+export const typeDefs = gql`
+type Query {
+  helloWolrd: String
+}
+`
+```
+
+If you don't define any resolvers, they will be mocked automatically for you. You can also use a `.graphql` file to define your schema and place the resolvers in a `.ts` file; they just need to be named the same.
+
+There is also the options of appending "*Resolvers*" to the filename if you wanted to define your `typeDefs` in a separate file from where you defined your `resolvers`.
+
+### Schema mocking
+
+By default, when the `process.env.NODE_ENV` is not set to `production`, any schema that doesn't have defined resolvers will be mocked. This code lives in the `src/utils/server.ts` file in the `createSubgraph` helper function. You can provide your own [custom mocks](https://www.graphql-tools.com/docs/mocking#customizing-mocks) to `createSubgraph` or the defaults from `@graphql-tools/mock` will be used. 
+
+### DataSource construction
+
+Apollo Server has a pattern where developers can define `dataSources` that will be available on the `context` in the GraphQL resolvers. In `src/utils/server.ts` there is a helper function `generateDataSources` that takes any datasources defined in `src/datasources` and populates them into the `ApolloServer` instance. Each file should define a single class that is exported like below:
+
+```typescript
+import { DataSource } from 'apollo-datasource';
+export class LocationsAPI extends DataSource {
+  ...
+}
+```
+
 ## GitHub
 
 In the GitHub settings tab, we typically configure a few things.
@@ -27,7 +67,7 @@ Generally, this rule enables:
 
 This repo comes with a few Circle jobs already implemented (see [`.circleci/config.yml`](.circleci/config.yml)). Circle will run tests on the versions of Node specified in the matrix and enforce linting via Prettier.
 
-In order to enable CircleCI on your new repo, visit the [Apollo org's dashboard](https://app.circleci.com/projects/project-dashboard/github/apollographql/) and add your project. If your repo has already been initialized and added to the apollographql org, you should see the option to add your new project.
+In order to enable CircleCI on your new repo, visit the [your org's dashboard](https://app.circleci.com/projects) and add your project. If your repo has already been initialized and added to your org, you should see the option to add your new project.
 
 ## Jest
 
@@ -39,38 +79,6 @@ To run tests in the repo:
 The Jest configuration can be found at `jest.config.ts`. As configured, Jest will run all files named `*.test.ts` found within any `__tests__` folder. This is simply a convention chosen by this repo and can be reconfigured via the `testRegex` configuration option in [`jest.config.ts`](jest.config.ts).
 
 For more information on configuring Jest see the [Jest docs](https://jestjs.io/docs/configuration).
-
-## Changesets
-
-Changesets is a tool for managing package versioning, NPM releases, GitHub releases, and CHANGELOG entries. In this template, it comes configured for all of the above.
-
-### Basic usage
-
-Changesets uses changeset files in the `.changeset` directory to determine what versioning upgrades need to happen next, along with related `CHANGELOG` updates and release notes. A changeset file is created by running `npx changeset` and following the prompts. PRs which make functional changes to the package should always come with an accompanying changeset file. The Changeset bot (details below) will comment on PRs as a reminder to contributors to include a changeset file when appropriate.
-
-### Changeset bot
-
-#### Installation
-
-[GitHub app](https://github.com/apps/changeset-bot)
-> Note: a GitHub _org_ admin must approve app installations. By adding a GitHub app to your repo, you'll be submitting a request for approval. At the time of writing this, the GitHub UI doesn't make this clear.
-
-You might also be interested in adding `changeset-bot` to the repo - it leaves comments about the changeset (or lack thereof) for each PR. This serves as a nice reminder and set of instructions for how to create a changeset.
-### CHANGELOG updates
-
-For proper CHANGELOG management, you MUST configure the [`.changeset/config.json`](.changeset/config.json) file for your repo. The `changelog.repo` field must be the `<org>/<name>` of the repo.
-
-### NPM Publishing
-
-Changesets manages and updates a release PR automatically via a GitHub action [`.github/workflows/release-pr.yml`](.github/workflows/release-pr.yml). The PR consumes all of the committed changesets on `main` in order to bump versions of packages and update the `CHANGELOG` accordingly. Merging this PR will result in publishes to npm IF you've provided an `NPM_TOKEN` as a secret to your repo's GitHub actions (`https://github.com/apollographql/<repo-name>/settings/secrets/actions`). Please reach out to anyone in the `#npm-apollo-bot-owners` Slack channel for a token. Changesets will also publish a GitHub release when this PR is merged.
-
-> Our action borrows directly from the action provided by `changesets`. Visit [the changesets action repo](https://github.com/changesets/action) for more info.
-
-### Removing Changesets
-
-If you're not interested in using `changesets`, just delete the [workflow](.github/workflows/release-pr.yml), uninstall the related dependencies, and delete the related scripts.
-
-> For additional information on `changesets`, [visit the docs](https://github.com/changesets/changesets#documentation).
 
 ## CodeSandbox CI
 
