@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: apollo
     env:
-      APOLLO_VCS_COMMIT: \${{ github.event.pull_request.head.sha }}
-      APOLLO_KEY: \${{ secrets.APOLLO_KEY }}
-      APOLLO_GRAPH_REF: ${graph}@production
+      APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@production
       SUBGRAPH_NAME: locations
-      ROUTING_URL: http://localhost:${port}
+      ROUTING_URL: ${{ secrets.PRODUCTION_URL }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -28,10 +28,11 @@ jobs:
         run: npm run schema:output
       - name: Install Rover
         run: |
-          curl -sSL https://rover.apollo.dev/nix/v0.1.0 | sh
+          curl -sSL https://rover.apollo.dev/nix/latest | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
       
       - name: Publish your schema to registry
+        if: ${{ env.APOLLO_KEY != '' }}
         run: |
-          rover subgraph publish ${APOLLO_GRAPH_REF} --name=${SUBGRAPH_NAME} --schema=./generated-schema.graphql --routing-url=${ROUTING_URL}
-        if: $ {{ env.APOLLO_KEY != '' && env.APOLLO_GRAPH_REF != ''}}
+          rover subgraph publish ${{ env.APOLLO_GRAPH_REF }} --name=${{ env.SUBGRAPH_NAME }} --schema=./generated-schema.graphql --routing-url=${{ env.ROUTING_URL }}
+        
