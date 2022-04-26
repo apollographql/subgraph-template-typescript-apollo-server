@@ -1,11 +1,12 @@
 import { DataSource } from 'apollo-datasource';
+import type { Location } from '../__generated__/resolvers-types';
 export class LocationsAPI extends DataSource {
-  getAllLocations() {
-    return locations;
+  getAllLocations(): [Location] {
+    return locations as [Location];
   }
 
-  getLocation(id: string) {
-    return locations.find((l) => l.id === id);
+  getLocation(id: string): Location {
+    return locations.find((l) => l.id === id) as Location;
   }
 }
 

@@ -16,7 +16,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
+    "importsNotUsedAsValues": "preserve",
     "lib": ["es2020", "esnext.asynciterable"],
     "types": ["node"],
     "baseUrl": ".",

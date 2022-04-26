@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
+import type {
+  QueryLocationArgs,
+  Resolvers,
+} from '../__generated__/resolvers-types';
 import type { DataSourceContext } from '../types/DataSourceContext';
-
-interface Location {
-  id: string;
-}
 
 export const typeDefs = gql`
   type Query {
@@ -24,22 +24,22 @@ export const typeDefs = gql`
   }
 `;
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
     locations(_parent: any, _args: any, { dataSources }: DataSourceContext) {
       return dataSources.LocationsAPI.getAllLocations();
     },
     location(
       _parent: any,
-      { id }: Location,
+      args: QueryLocationArgs,
       { dataSources }: DataSourceContext,
     ) {
-      return dataSources.LocationsAPI.getLocation(id);
+      return dataSources.LocationsAPI.getLocation(args.id);
     },
   },
   Location: {
-    __resolveReference(location: Location, { dataSources }: DataSourceContext) {
-      return dataSources.LocationsAPI.getLocation(location.id);
+    __resolveReference(location: { id: string }, context: DataSourceContext) {
+      return context.dataSources.LocationsAPI.getLocation(location.id);
     },
   },
 };
