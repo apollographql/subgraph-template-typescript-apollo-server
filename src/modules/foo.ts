@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const typeDefs = gql`
-  type Query {
+  extend type Query {
     foo: String
   }
 `;

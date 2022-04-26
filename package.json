@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc --build tsconfig.build.json && npm run schema:copy-files",
     "clean": "git clean -dfqX",
-    "dev":"nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
     "postinstall": "npm run build",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
@@ -32,7 +32,7 @@
     "test:ci": "jest --coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
-    "@apollo/subgraph": "https://output.circle-artifacts.com/output/job/a97806a8-3640-48ca-89b8-93b53cbfd6ac/artifacts/0/storage/@apollo/subgraph/subgraph-2.0.1.tgz",
+    "@apollo/subgraph": "0.4.2",
     "apollo-datasource": "latest",
     "apollo-server": "latest",
     "graphql": "latest",

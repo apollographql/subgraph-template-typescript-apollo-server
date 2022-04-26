@@ -6,7 +6,7 @@ interface Location {
 }
 
 export const typeDefs = gql`
-  type Query {
+  extend type Query {
     "The full list of locations presented by the Interplanetary Space Tourism department"
     locations: [Location!]!
     "The details of a specific location"
