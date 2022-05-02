@@ -33,7 +33,7 @@
     "test:ci": "jest --coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
-    "@apollo/subgraph": "0.4.2",
+    "@apollo/subgraph": "2.0.2-alpha.2",
     "apollo-datasource": "latest",
     "apollo-server": "latest",
     "graphql": "latest",
