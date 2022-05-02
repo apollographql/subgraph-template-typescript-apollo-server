@@ -19,9 +19,10 @@
     "node": ">=12.0"
   },
   "scripts": {
-    "build": "tsc --build tsconfig.build.json && npm run schema:copy-files",
+    "build": "npm run generate && tsc --build tsconfig.build.json && npm run schema:copy-files",
     "clean": "git clean -dfqX",
-    "dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
+    "dev":"nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
+    "generate": "graphql-codegen",
     "postinstall": "npm run build",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
@@ -39,6 +40,10 @@
     "graphql-tag": "latest"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.4.0",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-operations": "^2.2.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@types/jest": "27.4.1",
     "@types/node": "14.18.12",
     "concurrently": "^7.1.0",
