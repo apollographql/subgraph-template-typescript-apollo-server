@@ -1,11 +1,10 @@
 import { resolve, extname } from 'path';
-import { readFileSync, existsSync, Dirent, writeFileSync } from 'fs';
+import { readFileSync, Dirent, writeFileSync, readdirSync } from 'fs';
 import { gql } from 'graphql-tag';
 import { buildSubgraphSchema, printSubgraphSchema } from '@apollo/subgraph';
+import { GraphQLSchemaModule } from 'apollo-server';
 
-import { getFiles } from './files';
-import { MODULES_FOLDER } from './constants';
-const schemaModulesFolder = resolve(MODULES_FOLDER);
+const graphqlFolder = resolve(__dirname, '..', 'graphql');
 
 /**
  * Combines all `.graphql` files in the *src/modules* folder
@@ -14,19 +13,22 @@ const schemaModulesFolder = resolve(MODULES_FOLDER);
  */
 export async function generateSubgraphSchema() {
   const schemaModules = [];
-  const typeDefFiles = getFiles(schemaModulesFolder);
+  const schemaFiles = readdirSync(graphqlFolder, {
+    withFileTypes: true,
+  }).filter((file) => {
+    const extension = extname(file.name).toLowerCase();
 
-  for (const typeDefFile of typeDefFiles) {
-    const loadedModel = await loadModule(typeDefFile);
+    return extension === '.ts' || extension === '.graphql';
+  });
+
+  for (const schemaFile of schemaFiles) {
+    const loadedModel = await loadModule(schemaFile);
     if (loadedModel) {
-      schemaModules.push({
-        resolvers: loadedModel.resolvers ?? {},
-        typeDefs: loadedModel.typeDefs,
-      });
+      schemaModules.push(loadedModel);
     }
   }
 
-  return buildSubgraphSchema(schemaModules);
+  return buildSubgraphSchema(schemaModules as any);
 }
 
 export async function writeSchema() {
@@ -41,56 +43,41 @@ export async function writeSchema() {
 }
 
 /**
- * Load a schema modules typeDefs and resolvers.
- * Ordered by:
- *  1. {moduleName}.graphql
- *  2. {moduleName}.ts
- *  3. {moduleName}Resolvers.ts
+ * Load a set of typeDefs and resolvers.
  * @param module - The Dirent of the folder
  * @returns { typeDefs, resolvers? }
  */
-async function loadModule(module: Dirent) {
+async function loadModule(
+  module: Dirent,
+): Promise<GraphQLSchemaModule | undefined> {
   const moduleName = module.name.split('.').shift();
   if (moduleName) {
-    if (extname(module.name).toLowerCase() === '.graphql') {
+    const ext = extname(module.name).toLowerCase();
+    if (ext === '.graphql') {
       const typeDefs = gql(
-        readFileSync(resolve(__dirname, '..', 'modules', module.name), {
+        readFileSync(resolve(graphqlFolder, module.name), {
           encoding: 'utf-8',
         }),
       );
-      const resolvers = await getResolvers(moduleName);
-      if (resolvers) return { typeDefs, resolvers };
-      return { typeDefs };
-    } else if (extname(module.name).toLowerCase() === '.ts') {
-      const { typeDefs, resolvers } = await import(
-        resolve(__dirname, '..', 'modules', moduleName)
-      );
-      if (resolvers && typeDefs) return { typeDefs, resolvers };
-      else if (typeDefs) {
-        const resolvers = await getResolvers(moduleName);
+
+      try {
+        const { resolvers } = await import(resolve(graphqlFolder, moduleName));
+
         return { typeDefs, resolvers };
-      } else {
-        //These resolvers should be loaded with the associated .graphql or schema modules
+      } catch (err) {
+        console.log(
+          `No resolvers loaded for ${module.name}, schema will be mocked`,
+        );
       }
+
+      return { typeDefs };
+    } else if (ext === '.ts') {
+      const { typeDefs, resolvers } = await import(
+        resolve(graphqlFolder, moduleName)
+      );
+      if (!typeDefs) return undefined;
+      return { typeDefs, resolvers };
     }
   }
-  return undefined;
-}
-
-async function getResolvers(moduleName: string) {
-  if (existsSync(resolve(schemaModulesFolder, `${moduleName}.ts`))) {
-    const { resolvers } = await import(
-      resolve(__dirname, '..', 'modules', moduleName)
-    );
-    if (resolvers) return resolvers;
-  }
-
-  if (existsSync(resolve(schemaModulesFolder, `${moduleName}Resolvers.ts`))) {
-    const { resolvers } = await import(
-      resolve(__dirname, '..', 'modules', `${moduleName}Resolvers`)
-    );
-    if (resolvers) return resolvers;
-  }
-
   return undefined;
 }

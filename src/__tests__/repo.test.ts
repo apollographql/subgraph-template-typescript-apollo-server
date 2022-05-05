@@ -1,13 +1,22 @@
-import type { ApolloServer } from 'apollo-server-express';
-
-import createSubgraph from '../utils/server';
+import { ApolloServer } from 'apollo-server';
+import { generateDataSources } from '../utils/generateDataSources';
+import { generateSubgraphSchema } from '../utils/schema';
 
 let mockedSubgraph: ApolloServer;
 
 describe('Repository Template Functionality', () => {
   beforeAll(async () => {
-    const { subgraph } = await createSubgraph();
-    mockedSubgraph = subgraph;
+    let schema = await generateSubgraphSchema();
+    let dataSources = await generateDataSources();
+
+    const server = new ApolloServer({
+      schema,
+      mocks: true,
+      mockEntireSchema: false,
+      dataSources,
+    });
+    await server.listen();
+    mockedSubgraph = server;
   });
   afterAll(async () => {
     await mockedSubgraph.stop();
