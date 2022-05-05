@@ -18,6 +18,7 @@ async function main() {
         authorization: req?.headers['authorization'] ?? '',
       };
     },
+    cors: false,
   });
 
   await server

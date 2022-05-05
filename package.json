@@ -24,7 +24,7 @@
     "dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
     "generate": "concurrently npm:generate:*",
     "generate:resolver-types": "graphql-codegen",
-    "generate:rest-api": "swagger-typescript-api -p ./src/datasources/BarStoreREST.yaml -o ./src/datasources -n BarAPI.ts --axios",
+    "generate:rest-api": "swagger-typescript-api -p ./BarStoreREST-API.yaml -o ./src/datasources -n BarAPI.ts --axios",
     "postinstall": "npm run build",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
