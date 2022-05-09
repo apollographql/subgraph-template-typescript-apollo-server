@@ -42,33 +42,6 @@ export class LocationsAPI extends DataSource {
 }
 ```
 
-## GitHub
-
-In the GitHub settings tab, we typically configure a few things.
-
-**General**
-✅ Automatically delete head branches
-
-**Collaborators and Teams**
-Add relevant teams and contributors with appropriate roles
-
-**Branches**
-Typically we add a branch protection rule for `main`
-Generally, this rule enables:
-* ✅ Require a pull request before merging
-  * ✅ Require approvals (1)
-* ✅ Require status checks to pass before merging
-  * Each status check must be selected via the search box. Typing "ci/" will show you a list of the ones which exist within this template. "CLA" should also be enabled.
-
-**Code Security and Analysis**
-* Enable "Dependabot security updates" to receive security-related PRs from Dependabot
-
-## CircleCI
-
-This repo comes with a few Circle jobs already implemented (see [`.circleci/config.yml`](.circleci/config.yml)). Circle will run tests on the versions of Node specified in the matrix and enforce linting via Prettier.
-
-In order to enable CircleCI on your new repo, visit the [your org's dashboard](https://app.circleci.com/projects) and add your project. If your repo has already been initialized and added to your org, you should see the option to add your new project.
-
 ## Jest
 
 Jest is a testing framework used by most of Apollo's current projects.
@@ -124,11 +97,3 @@ To auto-fix formatting issues:
 This is enforced in CI via the `Prettier` job.
 
 > For additional information on configuring Prettier, [visit the docs](https://prettier.io/docs/en/options).
-
-## Volta
-
-Volta is a fast JS toolchain manager. Similar in effect to nvm, Volta allows for projects to specify their node / npm versions and will automatically handle the switching for you.
-
-If using [direnv](https://direnv.net/), Volta will automatically be installed for you. The node and npm versions are specified in [`package.json`](package.json) and Renovate handles keeping these versions up to date.
-
-> For additional information on configuring Volta, [visit the docs](https://docs.volta.sh/guide/).

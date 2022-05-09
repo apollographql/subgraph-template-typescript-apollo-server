@@ -20,8 +20,11 @@ export async function generateDataSources() {
         resolve(dataSourcesFolder, dataSourceName)
       );
 
+      // swagger-typescript-api generates an `Api` class
       if (dataSourceClass?.Api)
         dataSources[dataSourceName] = new dataSourceClass.Api({
+          //This is only as an example from
+          //  https://github.com/acacode/swagger-typescript-api/blob/master/tests/schemas/v3.0/petstore.yaml
           baseURL: 'http://localhost',
         });
       else dataSources[dataSourceName] = new dataSourceClass[dataSourceName]();

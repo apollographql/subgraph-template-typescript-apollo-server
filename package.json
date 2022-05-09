@@ -1,17 +1,17 @@
 {
-  "name": "@apollo/typescript-repo-template",
+  "name": "subgraph-template-typescript-apollo-server",
   "private": true,
   "description": "A template for TypeScript projects with pre-configured tooling",
   "version": "0.0.0",
-  "author": "Apollo <packages@apollographql.com>",
+  "author": "Apollo <watson@apollographql.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apollographql/typescript-repo-template"
+    "url": "https://github.com/apollographql/subgraph-template-typescript-apollo-server"
   },
-  "homepage": "https://github.com/apollographql/typescript-repo-template#readme",
+  "homepage": "https://github.com/apollographql/subgraph-template-typescript-apollo-server#readme",
   "bugs": {
-    "url": "https://github.com/apollographql/typescript-repo-template/issues"
+    "url": "https://github.com/apollographql/subgraph-template-typescript-apollo-server/issues"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,17 +20,18 @@
   },
   "scripts": {
     "build": "npm run generate && tsc --build tsconfig.build.json && npm run schema:copy-files",
-    "clean": "git clean -dfqX",
-    "dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\"",
     "generate": "concurrently npm:generate:*",
     "generate:resolver-types": "graphql-codegen",
-    "generate:rest-api": "swagger-typescript-api -p ./BarStoreREST-API.yaml -o ./src/datasources -n BarAPI.ts --axios",
+    "generate:rest-api": "swagger-typescript-api -p ./src/datasources/swagger.yaml -o ./src/datasources -n BarAPI.ts --axios",
     "postinstall": "npm run build",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "schema:copy-files": "shx cp ./src/graphql/*.graphql ./dist/graphql",
     "schema:output": "node -e 'require(\"./dist/utils/schema\").writeSchema()'",
     "start": "npm run build && node dist/index.js",
+    "start:mocked":"SHOULD_MOCK=true npm start",
+    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\" --ignore ./src/__generated__/ --ignore ./src/datasources/BarAPI.ts",
+    "start:dev-mocked": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start:mocked\" --ignore ./__generated__/ --ignore ./src/datasources/BarAPI.ts",
     "test": "jest",
     "test:ci": "jest --coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit"
   },
@@ -60,9 +61,5 @@
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "4.6.3"
-  },
-  "volta": {
-    "node": "16.14.2",
-    "npm": "8.6.0"
   }
 }

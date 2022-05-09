@@ -33,21 +33,10 @@ describe('Repository Template Functionality', () => {
     //Assert
     expect(res.data).toEqual(expected);
   });
-  it('Loads resolvers defined in {moduleName}Resolvers - fooResolvers.ts', async () => {
-    //Arrange
-    const query = 'query { foo }';
-    const expected = { foo: 'bar' };
-
-    //Act
-    const res = await mockedSubgraph.executeOperation({ query });
-
-    //Assert
-    expect(res.data).toEqual(expected);
-  });
   it('Load resolvers for .graphql file - bar.ts', async () => {
     //Arrange
-    const query = 'query { bar }';
-    const expected = { bar: 'foo' };
+    const query = 'query { bar(id:"1") { name appendedName } }';
+    const expected = { bar: { name: 'Bar', appendedName: 'Bar - appended' } };
 
     //Act
     const res = await mockedSubgraph.executeOperation({ query });
@@ -59,16 +48,16 @@ describe('Repository Template Functionality', () => {
     //Arrange
     const query = `query ($representations: [_Any!]!) {
       _entities(representations: $representations) {
-        ...on Location {
+        ...on Foo {
           name
         }
       }
     }`;
     const variables = {
-      representations: [{ __typename: 'Location', id: 'loc-1' }],
+      representations: [{ __typename: 'Foo', id: '1' }],
     };
     const expected = {
-      _entities: [{ name: 'The Living Ocean of New Lemuria' }],
+      _entities: [{ name: 'Foo' }],
     };
 
     //Act

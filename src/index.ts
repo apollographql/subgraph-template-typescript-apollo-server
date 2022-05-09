@@ -3,6 +3,8 @@ import { generateSubgraphSchema } from './utils/schema';
 import { generateDataSources } from './utils/generateDataSources';
 
 const PORT = 4001;
+const isProduction = process.env.NODE_ENV === 'production';
+const shouldMock = process.env.SHOULD_MOCK === 'true';
 
 async function main() {
   let schema = await generateSubgraphSchema();
@@ -10,7 +12,7 @@ async function main() {
 
   const server = new ApolloServer({
     schema,
-    mocks: process.env.NODE_ENV == 'production' ? false : true,
+    mocks: shouldMock,
     mockEntireSchema: false,
     dataSources,
     context: ({ req }) => {
@@ -18,7 +20,7 @@ async function main() {
         authorization: req?.headers['authorization'] ?? '',
       };
     },
-    cors: false,
+    cors: isProduction ? false : { origin: '*' },
   });
 
   await server
