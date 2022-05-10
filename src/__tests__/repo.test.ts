@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server';
+import { Dirent } from 'fs';
 import { generateDataSources } from '../utils/generateDataSources';
-import { generateSubgraphSchema } from '../utils/schema';
+import { generateSubgraphSchema, loadModule } from '../utils/schema';
 
 let mockedSubgraph: ApolloServer;
 
@@ -69,4 +70,14 @@ describe('Repository Template Functionality', () => {
     //Assert
     expect(res.data).toEqual(expected);
   });
+  it('Module not found returns undefined', async () => {
+    //Arrange
+    const emptyDirent = new Dirent();
+
+    //Act
+    const undefinedModule = await loadModule(emptyDirent);
+
+    //Assert
+    expect(undefinedModule).toBeUndefined();
+  })
 });

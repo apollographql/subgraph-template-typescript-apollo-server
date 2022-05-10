@@ -11,14 +11,15 @@ jobs:
     env:
       APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
       APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_NAME: ${{ secrets.APOLLO_GRAPH_NAME }}
       APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@production
-      SUBGRAPH_NAME: locations
+      SUBGRAPH_NAME: foo-bar
       ROUTING_URL: ${{ secrets.PRODUCTION_URL }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
           check-latest: true
       - name: Setup project
         run: npm install
@@ -30,9 +31,13 @@ jobs:
         run: |
           curl -sSL https://rover.apollo.dev/nix/latest | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
-      
       - name: Publish your schema to registry
-        if: ${{ env.APOLLO_KEY != '' }}
+        if: ${{ env.APOLLO_KEY != '' }} &&  $ {{ secrets.APOLLO_GRAPH_NAME != ''}}
         run: |
           rover subgraph publish ${{ env.APOLLO_GRAPH_REF }} --name=${{ env.SUBGRAPH_NAME }} --schema=./generated-schema.graphql --routing-url=${{ env.ROUTING_URL }}
-        
+      - name: No Apollo Studio Api Key is set
+        if: env.APOLLO_KEY == ''
+        run: echo "::warning file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No Apollo Studio Api Key is set in repository. Set this in the repository secrets under APOLLO_KEY"
+      - name: No Apollo Studio Graph Name is set
+        if: env.APOLLO_GRAPH_NAME == ''
+        run: echo "::warning file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No Apollo Studio Graph Name is set in repository. Set this in the repository secrets under APOLLO_GRAPH_NAME"

@@ -1,8 +1,9 @@
+import { gql } from 'graphql-tag';
 import { resolve, extname } from 'path';
 import { readFileSync, Dirent, writeFileSync, readdirSync } from 'fs';
-import { gql } from 'graphql-tag';
-import { buildSubgraphSchema, printSubgraphSchema } from '@apollo/subgraph';
+
 import { GraphQLSchemaModule } from 'apollo-server';
+import { buildSubgraphSchema, printSubgraphSchema } from '@apollo/subgraph';
 
 const graphqlFolder = resolve(__dirname, '..', 'graphql');
 
@@ -51,15 +52,17 @@ export async function writeSchema() {
  * @param module - The Dirent of the folder
  * @returns { typeDefs, resolvers? }
  */
-async function loadModule(
+export async function loadModule(
   module: Dirent,
 ): Promise<GraphQLSchemaModule | undefined> {
-  const moduleName = module.name.split('.').shift();
+  const moduleName = module.name?.split('.')?.shift();
   if (moduleName) {
     const ext = extname(module.name).toLowerCase();
     if (ext === '.graphql') {
+      const path = resolve(graphqlFolder, module.name);
+      console.log(`Loading .graphql module: ${path}`);
       const typeDefs = gql(
-        readFileSync(resolve(graphqlFolder, module.name), {
+        readFileSync(path, {
           encoding: 'utf-8',
         }),
       );
