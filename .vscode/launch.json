@@ -25,7 +25,27 @@
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
-          "run-script", "dev"
+          "run-script", "start:dev"
+      ],
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Server with mocks",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+          "run-script", "start:mocked"
+      ],
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Server with Nodemon and mocks",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+          "run-script", "start:dev-mocked"
       ],
     }
   ]
