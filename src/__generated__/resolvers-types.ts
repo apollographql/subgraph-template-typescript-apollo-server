@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { DataSourceContext } from '../types/DataSourceContext';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,30 +16,27 @@ export type Scalars = {
   _FieldSet: any;
 };
 
-export type Location = {
-  __typename?: 'Location';
-  /** A short description about the location */
-  description: Scalars['String'];
+export type Bar = {
+  __typename?: 'Bar';
+  appendedName?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Foo = {
+  __typename?: 'Foo';
   id: Scalars['ID'];
-  /** The name of the location */
-  name: Scalars['String'];
-  /** The location's main photo as a URL */
-  photo: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  bar?: Maybe<Scalars['String']>;
-  foo?: Maybe<Scalars['String']>;
+  bar?: Maybe<Bar>;
+  foos?: Maybe<Array<Maybe<Foo>>>;
   hello?: Maybe<Scalars['String']>;
-  /** The details of a specific location */
-  location?: Maybe<Location>;
-  /** The full list of locations presented by the Interplanetary Space Tourism department */
-  locations: Array<Location>;
 };
 
 
-export type QueryLocationArgs = {
+export type QueryBarArgs = {
   id: Scalars['ID'];
 };
 
@@ -123,8 +121,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Location: ResolverTypeWrapper<Location>;
+  Bar: ResolverTypeWrapper<Bar>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Foo: ResolverTypeWrapper<Foo>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -132,32 +131,36 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Location: Location;
+  Bar: Bar;
   String: Scalars['String'];
+  Foo: Foo;
   ID: Scalars['ID'];
   Query: {};
   Boolean: Scalars['Boolean'];
 }>;
 
-export type LocationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']> = ResolversObject<{
-  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Location']>, { __typename: 'Location' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  photo?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type BarResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Bar'] = ResolversParentTypes['Bar']> = ResolversObject<{
+  appendedName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  bar?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  foo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  location?: Resolver<Maybe<ResolversTypes['Location']>, ParentType, ContextType, RequireFields<QueryLocationArgs, 'id'>>;
-  locations?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>;
+export type FooResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Foo'] = ResolversParentTypes['Foo']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Foo']>, { __typename: 'Foo' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type Resolvers<ContextType = any> = ResolversObject<{
-  Location?: LocationResolvers<ContextType>;
+export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  bar?: Resolver<Maybe<ResolversTypes['Bar']>, ParentType, ContextType, RequireFields<QueryBarArgs, 'id'>>;
+  foos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Foo']>>>, ParentType, ContextType>;
+  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+}>;
+
+export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
+  Bar?: BarResolvers<ContextType>;
+  Foo?: FooResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;
 

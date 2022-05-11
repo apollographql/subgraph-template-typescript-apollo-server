@@ -1,11 +1,12 @@
 schema: 
-  - './src/modules/*.graphql'
-  - './src/modules/*.ts'
+  - './src/graphql/*.graphql'
+  - './src/graphql/*.ts'
 generates:
   ./src/__generated__/resolvers-types.ts:
     config:
       useIndexSignature: true
       federation: true
+      contextType: ../types/DataSourceContext#DataSourceContext
     plugins:
       - typescript
       - typescript-resolvers

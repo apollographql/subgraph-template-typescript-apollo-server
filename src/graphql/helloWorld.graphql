@@ -1,0 +1,4 @@
+# This will be mocked since no resolvers are defined
+type Query {
+  hello: String
+}
