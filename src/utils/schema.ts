@@ -38,9 +38,18 @@ export async function writeSchema() {
   
 # See https://github.com/apollographql/subgraph-template-typescript-apollo-server/blob/main/src/utils/schema.ts
 `;
+  const contactWorkaround = `schema 
+  @contact(
+    name: "FooBar Server Team"
+    url: "https://myteam.slack.com/archives/teams-chat-room-url"
+    description: "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
+  ) {
+  query: Query
+}
+`;
   writeFileSync(
     resolve(__dirname, '..', '..', 'generated-schema.graphql'),
-    `${generatedString}${printSubgraphSchema(schema)}`,
+    `${generatedString}${contactWorkaround}${printSubgraphSchema(schema)}`,
     {
       encoding: 'utf-8',
     },
