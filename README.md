@@ -4,19 +4,19 @@ This template repository contains the necessary boiler plate code for you to dev
 
 ## Using this template
 
-To get running quickly, use the `start:dev-mocked` npm script. This will start the server with `nodemon` and mock any portions of the schema that doesn't have resolvers 
-
 ### Quickstart 
 
 ```
 git clone https://github.com/apollographql/subgraph-template-typescript-apollo-server .
 npm i
-npm run start:dev-mocked
+npm run start
 ```
+
+To get running quickly, use the `start:dev-mocked` npm script. This will start the server with `nodemon` and mock any portions of the schema that doesn't have resolvers 
 
 ### The GraphQL Folder - your typeDefs and resolvers
 
-By default, the `src/graphql` folder is where your schema modules should live. A schema modules is defined by a set of type definitions and the associated resolvers (which are optional). The `src/utils/schema.js` file contains a helper function to generate a `GraphQLSchema` from the modules you define in the folder. The modules expect the `.graphql` file and associated resolvers to be named the same (i.e. `bar.graphql` and `bar.js`). 
+By default, the `src/graphql` folder is where your schema modules should live. A schema modules is defined by a set of type definitions and the associated resolvers (which are optional). The `src/utils/schema.js` file contains a helper function `generateSubgraphSchema` to generate a `GraphQLSchema` from the modules you define in the folder. The modules expect the `.graphql` file and associated resolvers to be named the same (i.e. `bar.graphql` and `bar.js`). 
 
 If you define resolvers, they should export `resolvers` and `typeDefs` like below:
 
@@ -91,12 +91,26 @@ For more information on configuring Jest see the [Jest docs](https://jestjs.io/d
 - `prettier:fix`: Fix project files with prettier
 - `schema:copy-files`: Copy all `.graphql` files from `src` folder to `dist` folder. This is because typescript only compiles `.ts` files over into the output folder, `.graphql` files have to be manually copied. Some teams place the schema at the root of the project for this reason, but this can make deployment challenging. `shx cp` ensures the copy of those files works on Mac/Windows/Linux.
 - `schema:output`: Combine all of the modularized schemas into a single schema and output to a file. This is intended to be used in CI operations for schema validation.
-- `start`: Build and Start up the project with mocking disabled
-- `start:mocked`: Build and Start up the project with mocking enabled
+- `start`: Start up the project with mocking disabled
+- `start:mocked`: Start up the project with mocking enabled
 - `start:dev`: Build and Start up the project using nodemon with mocking disabled. The project will build and restart on any file changes.
 - `start:dev-mocked`: Build and Start up the project using nodemon with mocking enabled. The project will build and restart on any file changes.
 - `test`: Run local unit tests
 - `test:ci`: Run local unit tests with CI options to generate a table
+
+## Prettier
+
+Prettier is an opinionated code formatting tool. 
+
+To check for formatting issues:
+`npm run prettier:check`
+
+To auto-fix formatting issues:
+`npm run prettier:fix`
+
+This is enforced in CI via the `Prettier` job.
+
+> For additional information on configuring Prettier, [visit the docs](https://prettier.io/docs/en/options).
 
 ## Renovate
 
@@ -113,17 +127,3 @@ If you've configured PRs to require approval (mentioned in [GitHub](#github)), y
 If you're unfamiliar with Renovate, the docs are really worth perusing even if just to get an idea of what kinds of configuration are possible.
 
 > For additional information on configuring Renovate, [visit the docs](https://docs.renovatebot.com/).
-
-## Prettier
-
-Prettier is an opinionated code formatting tool. 
-
-To check for formatting issues:
-`npm run prettier:check`
-
-To auto-fix formatting issues:
-`npm run prettier:fix`
-
-This is enforced in CI via the `Prettier` job.
-
-> For additional information on configuring Prettier, [visit the docs](https://prettier.io/docs/en/options).
