@@ -28,10 +28,10 @@
     "prettier:fix": "prettier --write .",
     "schema:copy-files": "shx cp ./src/graphql/*.graphql ./dist/graphql",
     "schema:output": "node -e 'require(\"./dist/utils/schema\").writeSchema()'",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "start:mocked": "SHOULD_MOCK=true npm start",
-    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start\" --ignore ./src/__generated__/ --ignore ./src/datasources/BarAPI.ts",
-    "start:dev-mocked": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run start:mocked\" --ignore ./__generated__/ --ignore ./src/datasources/BarAPI.ts",
+    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run build && npm run start\" --ignore ./src/__generated__/ --ignore ./src/datasources/BarAPI.ts",
+    "start:dev-mocked": "nodemon --watch \"src/**\" --ext \"ts,json,graphql\" --exec \"npm run build && npm run start:mocked\" --ignore ./__generated__/ --ignore ./src/datasources/BarAPI.ts",
     "test": "jest",
     "test:ci": "jest --coverage --ci --maxWorkers=2 --reporters=default --reporters=jest-junit"
   },

@@ -16,6 +16,10 @@ jobs:
         with:
           node-version: "14"
           check-latest: true
+      # Run Prettier Check before project is built
+      # Resolver type generation breaks prettier check
+      - name: Prettier Check
+        run: npx prettier --check
       - name: Setup project
         run: npm install
       - name: Run Unit Tests

@@ -8,8 +8,8 @@ import { buildSubgraphSchema, printSubgraphSchema } from '@apollo/subgraph';
 const graphqlFolder = resolve(__dirname, '..', 'graphql');
 
 /**
- * Combines all `.graphql` files in the *src/modules* folder
- * with resolvers *(optional)* into a single subgraph schema.
+ * Combines all defined typeDefs and resolvers
+ * from files in the *graphql* folder into a single subgraph schema.
  * @returns `GraphQLSchema`
  */
 export async function generateSubgraphSchema() {
@@ -38,9 +38,18 @@ export async function writeSchema() {
   
 # See https://github.com/apollographql/subgraph-template-typescript-apollo-server/blob/main/src/utils/schema.ts
 `;
+  const contactWorkaround = `schema 
+  @contact(
+    name: "FooBar Server Team"
+    url: "https://myteam.slack.com/archives/teams-chat-room-url"
+    description: "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
+  ) {
+  query: Query
+}
+`;
   writeFileSync(
     resolve(__dirname, '..', '..', 'generated-schema.graphql'),
-    `${generatedString}${printSubgraphSchema(schema)}`,
+    `${generatedString}${contactWorkaround}${printSubgraphSchema(schema)}`,
     {
       encoding: 'utf-8',
     },
@@ -57,10 +66,11 @@ export async function loadModule(
 ): Promise<GraphQLSchemaModule | undefined> {
   const moduleName = module.name?.split('.')?.shift();
   if (moduleName) {
+    console.log(`Loading GraphQLSchemaModule: ${module.name}`);
+
     const ext = extname(module.name).toLowerCase();
     if (ext === '.graphql') {
       const path = resolve(graphqlFolder, module.name);
-      console.log(`Loading .graphql module: ${path}`);
       const typeDefs = gql(
         readFileSync(path, {
           encoding: 'utf-8',
