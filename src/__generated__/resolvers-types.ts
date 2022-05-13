@@ -139,6 +139,14 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
 }>;
 
+export type ContactDirectiveArgs = {
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+};
+
+export type ContactDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = ContactDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type BarResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Bar'] = ResolversParentTypes['Bar']> = ResolversObject<{
   appendedName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -164,3 +172,6 @@ export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Query?: QueryResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
+  contact?: ContactDirectiveResolver<any, any, ContextType>;
+}>;

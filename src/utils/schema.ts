@@ -8,8 +8,8 @@ import { buildSubgraphSchema, printSubgraphSchema } from '@apollo/subgraph';
 const graphqlFolder = resolve(__dirname, '..', 'graphql');
 
 /**
- * Combines all `.graphql` files in the *src/modules* folder
- * with resolvers *(optional)* into a single subgraph schema.
+ * Combines all defined typeDefs and resolvers
+ * from files in the *graphql* folder into a single subgraph schema.
  * @returns `GraphQLSchema`
  */
 export async function generateSubgraphSchema() {
@@ -57,10 +57,11 @@ export async function loadModule(
 ): Promise<GraphQLSchemaModule | undefined> {
   const moduleName = module.name?.split('.')?.shift();
   if (moduleName) {
+    console.log(`Loading GraphQLSchemaModule: ${module.name}`);
+
     const ext = extname(module.name).toLowerCase();
     if (ext === '.graphql') {
       const path = resolve(graphqlFolder, module.name);
-      console.log(`Loading .graphql module: ${path}`);
       const typeDefs = gql(
         readFileSync(path, {
           encoding: 'utf-8',
