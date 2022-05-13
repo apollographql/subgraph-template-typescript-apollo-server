@@ -79,5 +79,5 @@ describe('Repository Template Functionality', () => {
 
     //Assert
     expect(undefinedModule).toBeUndefined();
-  })
+  });
 });
