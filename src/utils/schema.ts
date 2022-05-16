@@ -50,6 +50,8 @@ export async function writeSchema() {
       encoding: 'utf-8',
     },
   );
+
+  await server.stop();
 }
 
 /**
