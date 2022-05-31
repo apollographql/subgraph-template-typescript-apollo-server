@@ -26,7 +26,7 @@
     "postinstall": "npm run build",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "schema:copy-files": "shx cp ./src/graphql/*.graphql ./dist/graphql",
+    "schema:copy-files": "shx mkdir -p ./dist/graphql && shx cp ./src/graphql/*.graphql ./dist/graphql",
     "schema:output": "node -e 'require(\"./dist/utils/schema\").writeSchema()'",
     "start": "node dist/index.js",
     "start:mocked": "SHOULD_MOCK=true npm start",
