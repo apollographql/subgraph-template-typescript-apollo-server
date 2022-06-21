@@ -16,12 +16,6 @@ export type Scalars = {
   _FieldSet: any;
 };
 
-export type Bar = {
-  __typename?: 'Bar';
-  appendedName?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-};
-
 export type Foo = {
   __typename?: 'Foo';
   id: Scalars['ID'];
@@ -30,13 +24,12 @@ export type Foo = {
 
 export type Query = {
   __typename?: 'Query';
-  bar?: Maybe<Bar>;
+  foo?: Maybe<Foo>;
   foos?: Maybe<Array<Maybe<Foo>>>;
-  hello?: Maybe<Scalars['String']>;
 };
 
 
-export type QueryBarArgs = {
+export type QueryFooArgs = {
   id: Scalars['ID'];
 };
 
@@ -121,20 +114,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Bar: ResolverTypeWrapper<Bar>;
-  String: ResolverTypeWrapper<Scalars['String']>;
   Foo: ResolverTypeWrapper<Foo>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Bar: Bar;
-  String: Scalars['String'];
   Foo: Foo;
   ID: Scalars['ID'];
+  String: Scalars['String'];
   Query: {};
   Boolean: Scalars['Boolean'];
 }>;
@@ -147,12 +138,6 @@ export type ContactDirectiveArgs = {
 
 export type ContactDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = ContactDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type BarResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Bar'] = ResolversParentTypes['Bar']> = ResolversObject<{
-  appendedName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type FooResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Foo'] = ResolversParentTypes['Foo']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Foo']>, { __typename: 'Foo' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -161,13 +146,11 @@ export type FooResolvers<ContextType = DataSourceContext, ParentType extends Res
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  bar?: Resolver<Maybe<ResolversTypes['Bar']>, ParentType, ContextType, RequireFields<QueryBarArgs, 'id'>>;
+  foo?: Resolver<Maybe<ResolversTypes['Foo']>, ParentType, ContextType, RequireFields<QueryFooArgs, 'id'>>;
   foos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Foo']>>>, ParentType, ContextType>;
-  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
-  Bar?: BarResolvers<ContextType>;
   Foo?: FooResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;

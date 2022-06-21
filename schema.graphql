@@ -19,10 +19,10 @@ schema
 }
 
 type Query {
-  bar(id: ID!): Bar
+  foos: [Foo]
+  foo(id: ID!): Foo
 }
-
-type Bar {
+type Foo @key(fields: "id") {
+  id: ID!
   name: String
-  appendedName: String
 }

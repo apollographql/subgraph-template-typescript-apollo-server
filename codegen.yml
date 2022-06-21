@@ -1,7 +1,6 @@
 overwrite: true
 schema: 
-  - './src/graphql/*.graphql'
-  - './src/graphql/*.ts'
+  - './*.graphql'
 generates:
   ./src/__generated__/resolvers-types.ts:
     config:
